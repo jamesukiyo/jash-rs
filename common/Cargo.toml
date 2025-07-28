@@ -7,3 +7,4 @@ edition = "2024"
 path = "lib.rs"
 
 [dependencies]
+clap = { workspace = true }

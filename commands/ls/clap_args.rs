@@ -4,13 +4,7 @@ use clap::{Parser, arg};
 #[derive(Parser)]
 #[command(name = "ls")]
 #[command(about = "List contents of a directory")]
-#[clap(disable_help_flag = true)] // https://github.com/clap-rs/clap/discussions/3715#discussioncomment-7220515
 pub struct LsArgs {
-	// Allows use of -h elsewhere because otherwise it is used for help
-	// So now we just use --help for help
-	#[clap(long, action = clap::ArgAction::HelpLong)]
-	help: Option<bool>,
-
 	/// Directory path to list
 	#[arg(default_value = ".")]
 	pub path: String,
@@ -24,7 +18,7 @@ pub struct LsArgs {
 	pub long: bool,
 
 	/// Human readable output, only applies when used with -l
-	#[arg(short = 'h', long = "human")]
+	#[arg(short = 'H', long = "human-readable")]
 	pub human_readable: bool,
 
 	/// Reverse the sort order

@@ -1,79 +1,18 @@
 #[warn(clippy::pedantic)] // For learning/experimenting
 mod clap_args;
 
-use clap::Parser;
 use clap_args::LsArgs;
 use shell_common::{CommandResult, ShellCommand};
 
 pub struct LsCommand;
 
 impl ShellCommand for LsCommand {
+	type Args = LsArgs;
+	
 	fn name() -> &'static str {
 		"ls"
 	}
-	// Parse args and then exec ls
-	fn execute(args: &[&str]) -> CommandResult {
-		match Self::parse_args(args) {
-			Ok(parsed_args) => Self::execute_with_args(parsed_args),
-			Err(e) => {
-				// NOTE: Custom handling for help message
-				// If the error matches the clap error print it and return
-				// effectively ignoring the error
-				// There may be a better way to do this...
-				match e.kind() {
-					clap::error::ErrorKind::DisplayHelp => {
-						print!("{e}");
-						Ok(())
-					}
-					_ => {
-						// Otherwise print the error
-						eprintln!("{e}");
-						Err("Invalid arguments, please try again".to_string())
-					}
-				}
-			}
-		}
-	}
-}
-
-impl LsCommand {
-	// This was confusing to me but it works, thanks to a little help from
-	// Claude chat too..
-	// Now returns a clap::Error instead of a String so it can be handled by
-	// `execute`
-	fn parse_args(args: &[&str]) -> Result<LsArgs, clap::Error> {
-		let args_with_program =
-			std::iter::once("ls").chain(args.iter().copied());
-
-		LsArgs::try_parse_from(args_with_program)
-	}
-
-	// I have to credit a few posts online for this one because I almost didn't
-	// consider a number of things including the "1024" part somehow and got
-	// stuck on the conversions a little. Maybe there is a better way to do this
-	// with some crate for simplicity, idk. But it works...
-	fn fmt_file_size(size: u64, human_readable: bool) -> String {
-		if !human_readable {
-			return size.to_string();
-		}
-
-		const UNITS: &[&str] = &["B", "K", "M", "G", "T"];
-		let mut size_f = size as f64;
-		let mut unit_index = 0;
-
-		while size_f >= 1024.0 && unit_index < UNITS.len() - 1 {
-			size_f /= 1024.0;
-			unit_index += 1;
-		}
-
-		if unit_index == 0 {
-			format!("{}{}", size_f as u64, UNITS[unit_index])
-		} else {
-			format!("{:.1}{}", size_f, UNITS[unit_index])
-		}
-	}
-
-	// https://doc.rust-lang.org/std/fs/fn.read_dir.html
+	
 	fn execute_with_args(args: LsArgs) -> CommandResult {
 		// Read directory entries
 		let mut entries: Vec<_> = std::fs::read_dir(&args.path)
@@ -136,4 +75,32 @@ impl LsCommand {
 
 		Ok(())
 	}
+}
+
+impl LsCommand {
+	// I have to credit a few posts online for this one because I almost didn't
+	// consider a number of things including the "1024" part somehow and got
+	// stuck on the conversions a little. Maybe there is a better way to do this
+	// with some crate for simplicity, idk. But it works...
+	fn fmt_file_size(size: u64, human_readable: bool) -> String {
+		if !human_readable {
+			return size.to_string();
+		}
+
+		const UNITS: &[&str] = &["B", "K", "M", "G", "T"];
+		let mut size_f = size as f64;
+		let mut unit_index = 0;
+
+		while size_f >= 1024.0 && unit_index < UNITS.len() - 1 {
+			size_f /= 1024.0;
+			unit_index += 1;
+		}
+
+		if unit_index == 0 {
+			format!("{}{}", size_f as u64, UNITS[unit_index])
+		} else {
+			format!("{:.1}{}", size_f, UNITS[unit_index])
+		}
+	}
+
 }
