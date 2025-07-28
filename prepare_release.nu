@@ -3,7 +3,7 @@
 # workspace members with their crate names
 let workspace_crates = {
     "common": "jash-common",
-    "config": "jash-config", 
+    "config": "jash-config",
     "commands/cd": "jash-cd",
     "commands/ls": "jash-ls",
     "commands/pwd": "jash-pwd",
@@ -58,7 +58,7 @@ mut dependent_crates = []
 for member in ($workspace_crates | columns) {
     let dep_cargo_path = $"($member)/Cargo.toml"
     let dep_content = (open $dep_cargo_path --raw)
-    
+
     if ($dep_content | str contains $selected_crate) {
         $dependent_crates = ($dependent_crates | append $member)
     }
@@ -69,17 +69,17 @@ if not ($dependent_crates | is-empty) {
     for dep in $dependent_crates {
         print $"  - (($workspace_crates | get $dep))"
     }
-    
+
     let update_deps = (input "Update their dependency versions? (y/N): ")
     if ($update_deps | str downcase) == "y" {
         for dep in $dependent_crates {
             let dep_cargo_path = $"($dep)/Cargo.toml"
             let dep_content = (open $dep_cargo_path --raw)
-            
+
             # update the dependency version
             let pattern = $'($selected_crate) = \\{ path = "[^"]*"(, version = "[^"]*")?'
             let replacement = $'($selected_crate) = { path = "' + (if $dep == "main" { "../" } else { "../../" }) + $crate_dir + $'", version = "($new_version)"'
-            
+
             let updated_content = ($dep_content | str replace $pattern $replacement)
             $updated_content | save -f $dep_cargo_path
             print $"  Updated dependency in (($workspace_crates | get $dep))"
@@ -90,7 +90,7 @@ if not ($dependent_crates | is-empty) {
 cargo check --quiet
 
 git add .
-git commit -m $"chore(($selected_crate)): release v($new_version)"
+git commit -m $"chore: (($selected_crate)) release v($new_version)"
 git tag $tag_name
 git push origin HEAD
 git push origin $tag_name
