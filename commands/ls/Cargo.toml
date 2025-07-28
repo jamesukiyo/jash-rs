@@ -1,6 +1,6 @@
 [package]
-name = "shell-ls"
-version = "0.2.1"
+name = "jash-ls"
+version = "0.1.0"
 edition = "2024"
 
 [lib]
@@ -8,4 +8,4 @@ path = "lib.rs"
 
 [dependencies]
 clap = { workspace = true }
-shell-common = { path = "../../common" }
+jash-common = { path = "../../common" }

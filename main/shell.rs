@@ -3,13 +3,13 @@ use std::io::stdin;
 use crate::{exec, prompt};
 
 pub struct Shell {
-	config: shell_config::Config,
+	config: jash_config::Config,
 }
 
 impl Shell {
 	pub fn new() -> Self {
 		Shell {
-			config: shell_config::Config::load().unwrap_or_default(),
+			config: jash_config::Config::load().unwrap_or_default(),
 		}
 	}
 

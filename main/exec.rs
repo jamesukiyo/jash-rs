@@ -1,7 +1,7 @@
-use shell_cd::CdCommand;
-use shell_common::ShellCommand;
-use shell_ls::LsCommand;
-use shell_pwd::PwdCommand;
+use jash_cd::CdCommand;
+use jash_common::ShellCommand;
+use jash_ls::LsCommand;
+use jash_pwd::PwdCommand;
 
 pub fn exec_command(input: &str) -> Result<(), String> {
 	let parts: Vec<&str> = input.split_whitespace().collect();
@@ -41,28 +41,27 @@ pub fn exec_builtin(cmd: &str, args: &[&str]) -> Result<(), String> {
 			Ok(())
 		}
 		"help" => {
-			help()?;
+			help();
 			Ok(())
 		}
 		"reload" => {
-			todo!();
+			println!("reload: command not yet implemented");
+			Ok(())
 		}
 		_ => Ok(()),
 	}
 }
 
-fn help() -> Result<(), String> {
+fn help() {
 	println!(" cd <dir>  - Change directory");
 	println!(" pwd       - Print working directory");
 	println!(" ls        - List files in the current directory");
-	println!(" exit      - Exit shell-rs");
+	println!(" exit      - Exit jash");
 	println!(" reload    - Reserved keyword config reloading");
-
-	Ok(())
 }
 
 // TODO: add config reloading
 #[allow(dead_code)]
 fn reload() {
-	todo!();
+	println!("reload: command not yet implemented");
 }

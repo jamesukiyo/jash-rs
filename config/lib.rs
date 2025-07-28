@@ -17,7 +17,7 @@ impl Default for Config {
 	fn default() -> Self {
 		Config {
 			emoji: "🦀".to_string(),
-			display_name: "shell-rs".to_string(),
+			display_name: "jash".to_string(),
 			separator: "@".to_string(),
 			char: ">".to_string(),
 			insert_blank_line: true,
@@ -63,7 +63,7 @@ impl Config {
 
 		Ok(PathBuf::from(home)
 			.join(".config")
-			.join("shell-rs")
+			.join("jash")
 			.join("config.toml"))
 	}
 }

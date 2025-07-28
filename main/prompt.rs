@@ -1,7 +1,7 @@
 use std::env;
 use std::io::{Write, stdout};
 
-use shell_config::Config;
+use jash_config::Config;
 
 // TODO: maybe there's a cleaner way to do this?
 pub fn display_prompt(config: &Config) -> Result<(), std::io::Error> {

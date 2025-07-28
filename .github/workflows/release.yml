@@ -1,0 +1,97 @@
+name: "Release"
+
+on:
+    push:
+        tags:
+            - "jash-*-v*"
+
+env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
+    CARGO_TERM_COLOR: always
+
+jobs:
+    build:
+        name: Build
+        needs: lint
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: moonrepo/setup-rust@v1
+              with:
+                  channel: stable
+                  cache-base: "^master$"
+            - run: cargo build --workspace
+
+    fmt-check:
+        name: Format Check
+        runs-on: ubuntu-latest
+        continue-on-error: true # avoid failing CI for trivial formatting errors
+        steps:
+            - uses: actions/checkout@v4
+            - uses: moonrepo/setup-rust@v1
+              with:
+                  channel: nightly
+                  components: rustfmt
+                  cache-base: "^master$"
+            - run: cargo fmt --check --all
+
+    lint:
+        name: Lint
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: moonrepo/setup-rust@v1
+              with:
+                  channel: stable
+                  components: clippy
+                  cache-base: "^master$"
+            - run: cargo clippy --workspace
+
+    publish:
+        name: Publish
+        needs: [build, lint]
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: moonrepo/setup-rust@v1
+              with:
+                  channel: stable
+                  cache-base: "^master$"
+            # extract crate name from tag (e.g., jash-ls-v0.2.1 -> jash-ls)
+            - name: Extract crate name
+              id: extract
+              run: |
+                TAG_NAME=${GITHUB_REF#refs/tags/}
+                CRATE_NAME=$(echo $TAG_NAME | sed 's/-v[0-9]\+\.[0-9]\+\.[0-9]\+$//')
+                echo "crate_name=$CRATE_NAME" >> $GITHUB_OUTPUT
+                echo "Publishing crate: $CRATE_NAME"
+            # publish only the specific crate
+            - run: "cargo publish --token $CARGO_TOKEN -p ${{ steps.extract.outputs.crate_name }}"
+
+    tagged-release:
+        needs: [build, publish, lint]
+        permissions:
+            id-token: write
+            contents: write
+            packages: write
+        runs-on: ubuntu-latest
+        steps:
+            - uses: marvinpinto/action-automatic-releases@latest
+              with:
+                  repo_token: "${{ secrets.GITHUB_TOKEN }}"
+                  prerelease: false
+
+    # test:
+    #     name: Test
+    #     runs-on: ubuntu-latest
+    #     steps:
+    #         - uses: actions/checkout@v4
+    #           with:
+    #               fetch-depth: 0
+    #         - uses: moonrepo/setup-rust@v1
+    #           with:
+    #               bins: cargo-nextest
+    #               channel: nightly
+    #               cache-base: "^master$"
+    #         - run: "cargo nextest run --workspace --no-tests=pass --retries=2"

@@ -1,23 +1,25 @@
 mod clap;
 
 use std::env;
+
 use clap::CdArgs;
-use shell_common::{CommandResult, ShellCommand};
+use jash_common::{CommandResult, ShellCommand};
 
 pub struct CdCommand;
 
 impl ShellCommand for CdCommand {
 	type Args = CdArgs;
-	
+
 	fn name() -> &'static str {
 		"cd"
 	}
-	
+
 	fn execute_with_args(args: CdArgs) -> CommandResult {
 		let target_dir = match args.directory {
 			Some(dir) => {
 				if dir == "~" {
-					env::var("HOME").map_err(|_| "cd: HOME not set".to_string())?
+					env::var("HOME")
+						.map_err(|_| "cd: HOME not set".to_string())?
 				} else {
 					dir
 				}

@@ -1,0 +1,16 @@
+[package]
+name = "jash"
+version = "0.1.0"
+edition = "2024"
+
+[[bin]]
+name = "jash"
+path = "main.rs"
+
+[dependencies]
+clap = { workspace = true }
+jash-cd = { path = "../commands/cd" }
+jash-common = { path = "../common" }
+jash-config = { path = "../config" }
+jash-ls = { path = "../commands/ls" }
+jash-pwd = { path = "../commands/pwd" }

@@ -2,17 +2,17 @@
 mod clap_args;
 
 use clap_args::LsArgs;
-use shell_common::{CommandResult, ShellCommand};
+use jash_common::{CommandResult, ShellCommand};
 
 pub struct LsCommand;
 
 impl ShellCommand for LsCommand {
 	type Args = LsArgs;
-	
+
 	fn name() -> &'static str {
 		"ls"
 	}
-	
+
 	fn execute_with_args(args: LsArgs) -> CommandResult {
 		// Read directory entries
 		let mut entries: Vec<_> = std::fs::read_dir(&args.path)
@@ -102,5 +102,4 @@ impl LsCommand {
 			format!("{:.1}{}", size_f, UNITS[unit_index])
 		}
 	}
-
 }

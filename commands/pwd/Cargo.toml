@@ -1,5 +1,5 @@
 [package]
-name = "shell-pwd"
+name = "jash-pwd"
 version = "0.1.0"
 edition = "2024"
 
@@ -8,4 +8,4 @@ path = "lib.rs"
 
 [dependencies]
 clap = { workspace = true }
-shell-common = { path = "../../common" }
+jash-common = { path = "../../common" }

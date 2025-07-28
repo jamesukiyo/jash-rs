@@ -1,5 +1,5 @@
 [workspace]
-members = ["commands/cd", "commands/ls", "commands/pwd", "common", "config", "shell"]
+members = ["commands/cd", "commands/ls", "commands/pwd", "common", "config", "main"]
 resolver = "3"
 
 [workspace.dependencies]

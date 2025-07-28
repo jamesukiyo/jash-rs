@@ -1,6 +1,6 @@
-# shell-rs 🦀
+# jash 🦀
 
-Basic shell written in Rust.
+**jash** is a basic shell written in Rust.
 
 My second project written in Rust outside of learning/exercises.
 
@@ -28,19 +28,19 @@ See `default_config.toml`.
 ## Usage:
 
 ```
-$ git clone https://github.com/jamesukiyo/shell-rs.git
+$ git clone https://github.com/jamesukiyo/jash-rs.git
 
-$ cd shell-rs
+$ cd jash-rs
 
 $ cargo build --profile=release
 ```
-Binary can be found at `./target/release/shell-rs`.
+Binary can be found at `./target/release/jash`.
 
 Run it:
 ```
-$ ./target/release/shell-rs
+$ ./target/release/jash
 ```
-A config file will be created at `~/.config/shell-rs/config.toml`.
+A config file will be created at `~/.config/jash/config.toml`.
 
 ## Changelog
 
@@ -48,9 +48,7 @@ A config file will be created at `~/.config/shell-rs/config.toml`.
 - 0.1.0: base
 
 ### ls
-- 0.1.0: base
-- 0.2.0: added `-a`, `-l`, `-h`, `-r` options
-- 0.2.1: fix `--help` handling to hide additional error message
+- 0.1.0: base, added `-a`, `-l`, `-h`, `-r` options and fix `--help` handling
 
 ### pwd
 - 0.1.0: base
