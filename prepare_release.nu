@@ -21,7 +21,7 @@ print ""
 let selected_crate = (input "Enter crate name to release (e.g., jash-ls): ")
 
 # find the directory path for the selected crate
-let crate_dir = ($workspace_crates | items | where {|item| $item.value == $selected_crate} | get 0.key)
+let crate_dir = ($workspace_crates | items {|key, value| {key: $key, value: $value}} | where {|item| $item.value == $selected_crate} | get 0.key)
 
 if ($crate_dir | is-empty) {
     print $"Error: Crate '($selected_crate)' not found"
@@ -54,7 +54,7 @@ let cargo_content = (open $cargo_path --raw | str replace $'version = "($current
 $cargo_content | save -f $cargo_path
 
 # check if any other crates depend on this one and offer to update their dependencies
-let dependent_crates = []
+mut dependent_crates = []
 for member in ($workspace_crates | columns) {
     let dep_cargo_path = $"($member)/Cargo.toml"
     let dep_content = (open $dep_cargo_path --raw)
