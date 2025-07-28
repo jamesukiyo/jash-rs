@@ -28,30 +28,14 @@ See `default_config.toml`.
 ## Usage:
 
 ```
-$ git clone https://github.com/jamesukiyo/jash-rs.git
-
-$ cd jash-rs
-
-$ cargo build --profile=release
+cargo install jash
 ```
-Binary can be found at `./target/release/jash`.
 
-Run it:
+## Run
 ```
-$ ./target/release/jash
+$ jash
 ```
 A config file will be created at `~/.config/jash/config.toml`.
-
-## Changelog
-
-### cd
-- 0.1.0: base
-
-### ls
-- 0.1.0: base, added `-a`, `-l`, `-h`, `-r` options and fix `--help` handling
-
-### pwd
-- 0.1.0: base
 
 ## Improvements
 

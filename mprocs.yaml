@@ -1,0 +1,32 @@
+procs:
+    slave:
+        cmd:
+            [
+                "wsl",
+                "-d",
+                "debian",
+                "--exec",
+                "/home/james/.claude/local/claude",
+            ]
+        autostart: true
+        autorestart: true
+        add_path:
+            $select: os
+            windows: "c:/users/james/scoop/shims/nu"
+            $else: "echo 'skip adding to path'"
+    dev:
+        cmd: ["bacon"]
+        autostart: true
+        autorestart: true
+        add_path:
+            $select: os
+            windows: "c:/users/james/scoop/shims/nu"
+            $else: "echo 'skip adding to path'"
+    nu:
+        cmd: ["nu"]
+        autostart: true
+        autorestart: false
+        add_path:
+            $select: os
+            windows: "c:/users/james/scoop/shims/nu"
+            $else: "echo 'skip adding to path'"
